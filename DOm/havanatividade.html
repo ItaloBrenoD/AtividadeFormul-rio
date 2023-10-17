@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulário Para Atividade - ITALO BRENO - II per</title>
+</head>
+<style>
+  /* Criei esse css basico para deixar a pagina legal!!*/
+  /* Estilo do corpo da página */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  /* Estilo do formulário */
+  #Formulario {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 100%;
+  }
+
+  /* Estilo dos rótulos */
+  label {
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  /* Estilo dos selects */
+  select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+
+  /* Estilo do input de texto */
+  input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+
+  /* Estilo do botão */
+  button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  /* Estilo do botão de saída */
+  #divSaida {
+    margin-top: 20px;
+  }
+</style>
+
+<body>
+
+  <!-- criação do formulário, aqui é onde fica toda a estrutura da página! -->
+  <form id="Formulario">
+    <!-- Estrutura de seleção, dentro do label eu informo o que eu desejo, exatamente como se fosse uma legenda ou um rótulo, sobre o que se refere as minhas seleções. -->
+    <label for="select1">Para Onde você deseja viajar?</label>
+    <!--O select serve como se fosse "menu" -->
+    <select id="select1">
+      <!--"as opções do menu"-->
+      <option value="Brasil">Brasil</option>
+      <option value="Portugal">Portugal</option>
+      <option value="Estados Unidos">Estados Unidos</option>
+    </select>
+    <!--Segundo select, as opções desse select vão depender da opção escolhida no primeiro!-->
+    <label for="select2">Ótima escolha! Agora, você deseja ir através de qual meio de transporte?</label>
+    <select id="select2">
+      <option value="Avião">Avião</option>
+      <option value="Navio">Navio</option>
+    </select>
+    <!--Legenda do Espaço para digitar-->
+    <label for="textoEnviar">Insira aqui o que você deseja na sua viagem!</label>
+    <!--Campo para digitar-->
+    <input type="text" id="textoEnviar" placeholder="Digite Aqui">
+    <!--Botão de enviar-->
+    <button type="button" id="botaoEnviar">Enviar</button>
+  </form>
+  <!--Decidi criar uma div para colocar o botão de editar e de excluir junto com o texto completo-->
+  <div id="divSaida">
+
+  </div>
+
+  <script>
+    // Adicionando a função "getElementById", esta função serve para retornar o elemento cujo atributo foi ligado ao ID(no caso o objeto)
+    var select1 = document.getElementById('select1');
+    var select2 = document.getElementById('select2');
+    var textoEnviar = document.getElementById('textoEnviar');
+    var botaoEnviar = document.getElementById('botaoEnviar');
+    var divSaida = document.getElementById('divSaida');
+    // coloquei uma função junto com uma chamada, ou seja, toda vez que acontecer um "click" no botão enviar a função sera chamada
+    botaoEnviar.addEventListener('click', function () {
+      //adicionando o elemento value, neste elemento as opçoes elecionadas irão se tornar valores, por exemplo, o texto digitado será armazenado na variavel "textocriado"
+      var selectOpcao1 = select1.value;
+      var selectOpcao2 = select2.value;
+      var textoCriado = textoEnviar.value;
+      //Inserindo na div o texto digitado
+      var textoDiv = document.createElement('div');
+      //Professora pesquisei muito sobre a diferença entre o textcontent e o innerHtml, e decidi escolher o textcontent,  pois, a maioria da galera utiliza ele '-'
+      textoDiv.textContent = `País escolhido: ${selectOpcao1}, meio de transporte selecionado: ${selectOpcao2}, Seus desejos para a viagem: ${textoCriado}`;
+      // Botão editar junto com a chamada e a função
+      var botaoEditar = document.createElement('button');
+      botaoEditar.textContent = 'Editar';
+      botaoEditar.addEventListener('click', function () {
+        textoEnviar.value = textoCriado;
+      });
+      //botão deletar junto com a chamada e a função
+      var botaoDeletar = document.createElement('button');
+      botaoDeletar.textContent = 'Excluir';
+      botaoDeletar.addEventListener('click', function () {
+        //ao clicar todo o textodiv será removido, pois, coloquei a função ".remove"
+        textoDiv.remove();
+      });
+      // O appendChild vai servir para criar um novo "nó" no evento, ou seja, estou inserindo o elemnto filho no elemento pai!
+      textoDiv.appendChild(botaoEditar);
+      textoDiv.appendChild(botaoDeletar);
+
+      divSaida.appendChild(textoDiv);
+
+      // Limpar os campos após a edição do texto
+      select1.value = '';
+      select2.value = '';
+      textoEnviar.value = '';
+    });
+
+    //o segundo select com base na seleção do primeiro select, com uma chamada e uma função
+    select1.addEventListener('change', function () {
+      var selectOpcao1 = select1.value;
+
+      // Limpar opções anteriores
+      select2.innerHTML = '';
+      // Professora perdão pelo código mal otimizado, tentei diversas formas de fazer mais otimizado, mas, não consegui, por isso essas gradnes quantidades de "IF"
+      if (selectOpcao1 === 'Brasil') {
+        // Adicionar opções para 'Brasil' em select2
+        var option1 = document.createElement('option');
+        option1.value = 'Avião';
+        option1.textContent = 'Avião';
+        select2.appendChild(option1);
+
+        var option2 = document.createElement('option');
+        option2.value = 'Navio';
+        option2.textContent = 'Navio';
+        select2.appendChild(option2);
+
+        var option3 = document.createElement('option');
+        option3.value = 'Ônibus';
+        option3.textContent = 'Ônibus';
+        select2.appendChild(option3);
+
+      } else if (selectOpcao1 === 'Portugal') {
+        // Adicionar opções para 'Portugal' em select2
+        var option4 = document.createElement('option');
+        option4.value = 'Avião';
+        option4.textContent = 'Avião(Portugal)';
+        select2.appendChild(option4);
+
+        var option5 = document.createElement('option');
+        option5.value = 'Navio';
+        option5.textContent = 'Navio(Portugal)';
+        select2.appendChild(option5);
+      }
+      else if (selectOpcao1 === 'Estados Unidos')
+      // adicionar opções para 'Estados Unidos' em select2
+        var option6 = document.createElement('option');
+      option6.value = 'Carro';
+      option6.textContent = 'Carro (EUA)';
+      select2.appendChild(option6);
+
+      var option7 = document.createElement('option');
+      option7.value = 'Ônibus';
+      option7.textContent = 'Ônibus (EUA)';
+      select2.appendChild(option7);
+
+      var option8 = document.createElement('option');
+      option8.value = 'Avião';
+      option8.textContent = 'Avião (EUA)';
+      select2.appendChild(option8);
+
+    });
+    ;
+  </script>
+
+
+</body>
+
+</html>
